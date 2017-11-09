@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'rowOptions'=>function($model){
-            if($model->username == 'admin'){
+            if($model->position != "Worker"){
                 return ['style'=>'display:none'];
             }
         },

@@ -7,14 +7,15 @@
 
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
+<div style="display:flex" class="site-login">
 
-    <div class="row" style="text-align: left">
+    <div class="row" style="text-align: left; margin: 0 auto">
         <div class="col-lg-12">
+            <h1><?= Html::encode($this->title) ?></h1>
             <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
             <?= $form->field($model, 'username', ['options' =>
@@ -35,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <?= $form->field($model, 'rememberMe')->checkbox() ?>
 
-            <div style="color:#999;margin:1em 0;font-size: 90%">
+            <div class="forgot_pass_p">
                 If you forgot your password you can <?= Html::a('reset it', ['site/request-password-reset']) ?>.
             </div>
 
@@ -46,4 +47,5 @@ $this->params['breadcrumbs'][] = $this->title;
             <?php ActiveForm::end(); ?>
         </div>
     </div>
+
 </div>

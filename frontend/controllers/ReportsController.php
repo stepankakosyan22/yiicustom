@@ -11,6 +11,9 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\data\Pagination;
+use yii\filters\AccessControl;
+
 /**
  * ReportsController implements the CRUD actions for Reports model.
  */
@@ -22,6 +25,16 @@ class ReportsController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update'],
+                'rules' => [
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -43,7 +56,13 @@ class ReportsController extends Controller
             ->from('reports')
             ->where(['id_user' =>$current_id])
             ->join('INNER JOIN', 'projects', 'projects.id_project = reports.id_project')
-            ->all();
+        ->orderBy(['report_day'=>SORT_DESC]);
+        $pagination=new Pagination([
+            'defaultPageSize' => 15,
+            'totalCount'=>$reports->count()
+        ]);
+        $reports=$reports->offset($pagination->offset)->limit($pagination->limit)->all();
+
         $dataProvider = new ActiveDataProvider([
             'query' => Reports::find(),
         ]);
@@ -51,6 +70,7 @@ class ReportsController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'reports' => $reports,
+            'pagination'=>$pagination,
         ]);
     }
 
@@ -65,7 +85,6 @@ class ReportsController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
-
     /**
      * Creates a new Reports model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -99,8 +118,15 @@ class ReportsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id_report]);
+        if ($model->load(Yii::$app->request->post())) {
+            if(substr($model->report_day,0,10)==date('Y-m-d')){
+                $model->report_day = date('Y-m-d h:m:s');
+                $model->save();
+            }else{
+                $this->redirect(['update', 'id' => $model->id_report]);
+                return $model->addError('description',$error='You cannot edit past days reports!');
+            }
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,

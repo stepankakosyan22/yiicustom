@@ -24,6 +24,7 @@ return [
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'baseUrl'=>''
         ],
         'user' => [
             'identityClass' => 'common\models\User',
@@ -31,7 +32,6 @@ return [
             'identityCookie' => ['name' => '_identity-frontend', 'httpOnly' => true],
         ],
         'session' => [
-            // this is the name of the session cookie used for login on the frontend
             'name' => 'advanced-frontend',
         ],
         'log' => [
@@ -50,13 +50,16 @@ return [
             'class' => 'yii\web\UrlManager',
             'enablePrettyUrl' => true,
 //            'enableStrictParsing' => true,
-            'showScriptName' => true,
+            'showScriptName' => false,
             'rules' => [
+                '' => 'site/index',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
         ],
+
         'urlManagerBackend' => [
             'class' => 'yii\web\urlManager',
             'baseUrl' => 'http://adminside.loc',  //i.e. $_SERVER['DOCUMENT_ROOT'] .'/yiiapp/web/'

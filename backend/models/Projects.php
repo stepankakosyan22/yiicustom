@@ -3,6 +3,7 @@
 namespace backend\models;
 
 use Yii;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "projects".
@@ -18,6 +19,10 @@ use Yii;
 class Projects extends \yii\db\ActiveRecord
 {
     /**
+     * @var UploadedFile
+     */
+    public $logoFile;
+    /**
      * @inheritdoc
      */
     public static function tableName()
@@ -32,18 +37,23 @@ class Projects extends \yii\db\ActiveRecord
     {
         return [
             [['start_date', 'customer'], 'required'],
-            [['edf'], 'integer', 'skipOnEmpty' => true],
+            [['edf'], 'integer',  'min' => 1,'skipOnEmpty' => true],
             [['start_date', 'end_date'], 'safe'],
-            [['logo'], 'string', 'max' => 255],
-            [['customer', 'logo'], 'string', 'max' => 255],
+            [['logo'], 'file','skipOnEmpty' => true, 'extensions' => 'jpeg, png, jpg,gif'],
+            [['customer'], 'string', 'max' => 255],
 
             //custom validation
             ['project_name', 'required', 'message' => 'Please write a project name.'],
             ['project_name', 'string', 'min' => 2],
             ['project_name','unique'],
             ['end_date', 'validateDates'],
-
         ];
+    }
+    public function scenarios() {
+        $scenarios = parent::scenarios();
+        $scenarios['create_project'] = ['project_name','start_date','edf','start_date', 'customer','logo','end_date'];
+        $scenarios['update_project'] = ['start_date','edf','start_date', 'customer','logo','end_date'];
+        return $scenarios;
     }
 
     /**
@@ -72,10 +82,23 @@ class Projects extends \yii\db\ActiveRecord
             }
         }
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getWorkersWorker(){
+    public function getCustomersCustomer(){
         return $this->hasOne(ProjectWorker::className(), ['id_project'=>'id_project']);
     }
+//    public function upload()
+//    {
+//        if ($this->validate()) {
+//            if(isset($this->logo)){
+//
+//                $this->logoFile->saveAs(Yii::getAlias('@basedir').'/res/audio/' . $this->logoFile->baseName . '.' . $this->logoFile->extension, false);
+//                return true;
+//            }
+//        } else {
+//            return false;
+//        }
+//    }
 }

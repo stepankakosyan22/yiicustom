@@ -73,27 +73,39 @@ class ProjectsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->scenario = 'update_project';
         $developers=ProjectWorker::find()->where(['id_project'=>$model->id_project])->all();
+
         $users=User::find()->all();
         $worker = new ProjectWorker();
         $worker_ids = Yii::$app->request->post();
 
+
+
         if ($model->load(Yii::$app->request->post())) {
-            $model->save();
-            foreach ($worker_ids['ProjectWorker']['id_worker'] as $id_worker) {
-                $workers = new ProjectWorker();
-                if (!($workers->id_project == $model->id_project && $workers->id_worker == $id_worker)) {
-                    $workers->id_project = $model->id_project;
-                    $workers->id_worker = $id_worker;
-                    $workers->save();
-                } else {
-                    echo 'es inch arir';
-                    exit();
-                }
-
-
+            foreach ($developers as $developer){
+                $developer->delete();
             }
-            return $this->redirect(['view', 'id' => $model->id_project]);
+            $imageName = $model->project_name;
+            $model->logo = UploadedFile::getInstance($model, 'logo');
+            if (!empty($model->logo)) {
+                $model->logo->saveAs('uploads/logo/' . $imageName . '.' . $model->logo->extension);
+                $model->logo = 'uploads/logo/' . $imageName . '.' . $model->logo->extension;
+            }
+            $model->save();
+            if($worker_ids['ProjectWorker']['id_worker'] ){
+                foreach ($worker_ids['ProjectWorker']['id_worker'] as $id_worker) {
+                    $workers = new ProjectWorker();
+                    if (!($workers->id_project == $model->id_project && $workers->id_worker == $id_worker)) {
+                        $workers->id_project = $model->id_project;
+                        $workers->id_worker = $id_worker;
+                        $workers->save();
+                    }
+                }
+            }
+
+
+            return $this->redirect(['/site/project', 'id_project' => $model->id_project]);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -109,19 +121,23 @@ class ProjectsController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
+
     public function actionCreate()
     {
         $model = new Projects();
+        $model->scenario = 'create_project';
         $worker_ids = Yii::$app->request->post();
         $worker = new ProjectWorker();
 
-
         if ($model->load(Yii::$app->request->post()) && isset($worker_ids['ProjectWorker']) && isset($worker_ids['ProjectWorker']['id_worker'])) {
             $imageName = $model->project_name;
+
+            $model->logo = UploadedFile::getInstance($model, 'logo');
+
             if (!empty($model->logo)) {
-                $model->logo = UploadedFile::getInstance($model, 'logo');
                 $model->logo->saveAs('uploads/logo/' . $imageName . '.' . $model->logo->extension);
                 $model->logo = 'uploads/logo/' . $imageName . '.' . $model->logo->extension;
+
             }
             $model->save();
             if (!empty($worker_ids['ProjectWorker']['id_worker'])) {
@@ -133,7 +149,7 @@ class ProjectsController extends Controller
                 }
             }
 
-            return $this->redirect(['view', 'id' => $model->id_project]);
+            return $this->redirect(['/site/project', 'id_project' => $model->id_project]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -160,7 +176,7 @@ class ProjectsController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        return $this->redirect(['index']);
+        return $this->redirect(['/site/index']);
     }
 
     /**
@@ -172,7 +188,6 @@ class ProjectsController extends Controller
      */
     protected function findModel($id)
     {
-
         if (($model = Projects::findOne($id)) !== null) {
             return $model;
         } else {

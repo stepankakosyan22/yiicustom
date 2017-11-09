@@ -1,8 +1,10 @@
 <?php
+
 namespace backend\controllers;
 
 use backend\models\Projects;
 use backend\models\ProjectWorker;
+use backend\models\User;
 use Yii;
 use yii\db\Query;
 use yii\web\Controller;
@@ -10,7 +12,8 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
 use app\models\Reports;
-
+use yii\data\Pagination;
+use yii\data\SqlDataProvider;
 
 /**
  * Site controller
@@ -70,9 +73,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $all_projects=Projects::find()->all();
-        return $this->render('index',[
-            'all_projects'=>$all_projects
+        $all_projects = Projects::find();
+        $pagination=new Pagination([
+            'defaultPageSize' => 6,
+            'totalCount'=>$all_projects->count()
+        ]);
+        $all_projects=$all_projects->offset($pagination->offset)->limit($pagination->limit)->all();
+
+        return $this->render('index', [
+            'all_projects' => $all_projects,
+            'pagination'=>$pagination
         ]);
     }
 
@@ -82,28 +92,31 @@ class SiteController extends Controller
      * @return string
      */
 
-    public function actionProject() {
-        $project=Projects::find()
-            ->where(['id_project'=>Yii::$app->request->get()['id_project']])
+    public function actionProject()
+    {
+        $project = Projects::find()
+            ->where(['id_project' => Yii::$app->request->get()['id_project']])
             ->one();
         $reports = (new Query())
             ->select('*')
             ->from('reports')
             ->where(['id_project' => Yii::$app->request->get()['id_project']])
-            ->orderBy(['report_day'=>SORT_DESC])
+            ->orderBy(['report_day' => SORT_DESC])
             ->all();
-        $workers_of_project=(new Query())
+        $workers_of_project = (new Query())
             ->select('*')
             ->from('projects')
-            ->join('INNER JOIN','project_worker','projects.id_project=project_worker.id_project')
-            ->join('INNER JOIN','user','project_worker.id_worker=user.id')
-            ->where(['projects.id_project'=>Yii::$app->request->get()['id_project']])
+            ->join('INNER JOIN', 'project_worker', 'projects.id_project=project_worker.id_project')
+            ->join('INNER JOIN', 'user', 'project_worker.id_worker=user.id')
+            ->where(['projects.id_project' => Yii::$app->request->get()['id_project']])
             ->all();
+        $customer_name=User::find()->where(['position'=>'Customer'])->all();
 
-        return $this->render('project',[
-            'project' =>$project,
-            'workers_of_project'=>$workers_of_project,
-            'reports'=>$reports
+        return $this->render('project', [
+            'project' => $project,
+            'workers_of_project' => $workers_of_project,
+            'reports' => $reports,
+            'customer_name'=>$customer_name
         ]);
     }
 

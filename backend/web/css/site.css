@@ -8,6 +8,10 @@ body {
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-attachment: fixed;
+    background-image: url("/uploads/bg/4.jpg");
 }
 
 .wrap > .container {

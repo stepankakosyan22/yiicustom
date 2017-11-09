@@ -10,85 +10,40 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use \yii\helpers\ArrayHelper;
 use yii\helpers\Url;
+use yii\web\UploadedFile;
 
 $this->title = 'Signup';
 ?>
+<div style="display:flex;">
+    <div class="col-lg-8" style="margin: -10px auto">
 
-    <div style="margin-left: 15% ">
+        <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="col-lg-8">
-            <h1><?= Html::encode($this->title) ?></h1>
+        <?php $form = ActiveForm::begin(
+            [
+                'options' => ['enctype' => 'multipart/form-data'],
+                'id' => 'form-signup',
+                'enableAjaxValidation' => true,
+                'validationUrl' => Url::to('/index.php/site/validation')
+            ]); ?>
 
-            <?php $form = ActiveForm::begin(
-                [
-                    'id' => 'form-signup',
-                    'enableAjaxValidation' => true,
-                    'options' => ['enctype' => 'multipart/form-data'],
-                    'validationUrl' => Url::to('/index.php/site/validation')
-                ]); ?>
 
-            <?= $form->field($model, 'position', [
-                "template" => "<label> Your position in We Do Apps </label>\n{input}\n{hint}\n{error}"
-            ])->dropDownList(['Worker' => 'Worker', 'Customer' => 'Customer']) ?>
+        <?= $form->field($model, 'position', [
+            "template" => "<label> Your position in We Do Apps <span class='required_asterix'>*</span></label>\n{input}\n{hint}\n{error}"
+        ])->dropDownList(['Worker' => 'Worker', 'Customer' => 'Customer'], ['prompt' => 'Select your position']) ?>
 
-            <div class="customer_inputs">
-                <?= $form->field($model, 'company_name')->textInput() ?>
-            </div>
+        <?= $form->field($model, 'full_name')->textInput()
+            ->label('
+                    <span class="full_name" style="display:none">Full </span><span class="company_name"  style="display:none">Company </span> 
+                    Name<span class="required_asterix">*</span>') ?>
+        <?= $form->field($model, 'username')->textInput()->label('Username <span class="required_asterix">*</span>') ?>
 
-            <div class="worker_inputs">
+        <?= $form->field($model, 'email')->textInput()->label('E-mail <span class="required_asterix">*</span>') ?>
 
-                    <div style="display:flex">
-                        <div style='width:48%;margin-right:5px;float: left'>
-                            <?= $form->field($model, 'first_name')->textInput()->label('Name') ?>
-                        </div>
-                        <div style='width:51%'>
-                            <?= $form->field($model, 'last_name')->textInput()->label('Surname') ?>
-                        </div>
-                    </div>
-                    <div style="display:flex">
-                        <div style='width:48%;margin-right:5px;float: left'>
-                            <?= $form->field($model, 'gender')
-                                ->inline()
-                                ->radioList(['Male' => 'Male', 'Female' => 'Female']); ?>
-                        </div>
-                        <div style='width:51%'>
-                            <?= $form->field($model, 'prof_image')->fileInput(['class' => 'worker_inputs'])->label('Picture') ?>
-                        </div>
-                    </div>
-                    <div style="display:flex">
-                        <div style='width:48%;margin-right:5px;float: left'>
-                            <?= $form->field($model, 'dob')->widget(
-                                DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']
-                            ])->label('Date of birth') ?>
-                        </div>
-                        <div style='width:51%'>
-                            <?= $form->field($model, 'start_working_at')->widget(
-                                DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']]
-                            )->label('Start working at') ?>
-                        </div>
-                    </div>
-                    <div style="display:flex">
-                        <div style='width:48%;margin-right:5px;float: left'>
-                            <?= $form->field($model, 'work_time')->dropDownList(['Full time' => 'Full time', 'Half time' => 'Half time'], ['prompt' => 'Select...']) ?>
-                        </div>
-                        <div style='width:51%'>
-
-                            <?= $form->field($model, 'team')->dropDownList(['WEB' => 'WEB', 'Mobile' => 'Mobile'], ['prompt' => 'Select...']) ?>
-                        </div>
-                    </div>
-
-            </div>
-
-                <?= $form->field($model, 'username')->textInput() ?>
-
-                <?= $form->field($model, 'email')->textInput() ?>
-
-                <?= $form->field($model, 'password')->passwordInput() ?>
-            </fieldset>
-            <div class="form-group">
-                <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
-            </div>
-
-            <?php ActiveForm::end(); ?>
+        <?= $form->field($model, 'password')->passwordInput()->label('Password <span class="required_asterix">*</span>') ?>
+        <div class="form-group">
+            <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
         </div>
+        <?php ActiveForm::end(); ?>
     </div>
+</div>

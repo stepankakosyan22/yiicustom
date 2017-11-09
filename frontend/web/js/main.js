@@ -1,22 +1,17 @@
-// $(document).ready(function () {
-//     alert('allll');
-//     // function myAjax(url, data) {
-//     //     $.ajax({
-//     //         url: url,
-//     //         type: 'post',
-//     //         data: data,
-//     //         success: function (res) {
-//     //             console.log(res);
-//     //         }
-//     //     });
-//     // }
-//     // $(document).delegate(".adding_new_project", "click", function () {
-//     //  alert('heeeeeeeeeeeeeeyyyyyyyy');
-//     // });
-//
-// });
+
 
 $(function () {
+    function myAjax(url, data) {
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: data,
+            success: function (res) {
+                console.log(res);
+            }
+        });
+    }
+
     $('#reportModalButton').click(function () {
         $('#modal').modal('show')
             .find('#reportModalContent')
@@ -29,21 +24,27 @@ $(function () {
             .load($('#loginModalButton').attr('value'));
     });
 
+
     var type = jQuery("#signupform-position").val();
     if (type == 'Worker') {
-        $(".customer_inputs").prop("disabled", false).hide();
-        $(".worker_inputs").prop("disabled", false).show();
-    } else {
-        $(".customer_inputs").prop("disabled", true).show();
-        $(".worker_inputs").prop("disabled", false).hide();
+        $(".company_name").prop("disabled", false).hide();
+        $(".full_name").prop("disabled", false).hide();
+    } else{
+        $(".company_name").prop("disabled", true).hide();
+        $(".full_name").prop("disabled", false).hide();
     }
     $('#signupform-position').on('change', function () {
         if (this.value=='Worker') {
-            $(".customer_inputs").prop("disabled", false).hide();
-            $(".worker_inputs").prop("disabled", true).show();
-        } else {
-            $(".customer_inputs").prop("disabled", true).show();
-            $(".worker_inputs").prop("disabled", false).hide();
+            $(".company_name").prop("disabled", false).hide();
+            $(".full_name").prop("disabled", true).show();
+        }
+        if(this.value=='Customer') {
+            $(".company_name").prop("disabled", true).show();
+            $(".full_name").prop("disabled", false).hide();
+        }
+        if(this.value=='') {
+            $(".company_name").prop("disabled", true).hide();
+            $(".full_name").prop("disabled", false).hide();
         }
     });
 });

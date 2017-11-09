@@ -47,6 +47,10 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                    ],
                 ],
             ],
             'verbs' => [
@@ -81,6 +85,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+
         $current_user_id = \Yii::$app->user->id;
         $customer_projects=(new Query())
             ->select('*')
@@ -111,13 +116,13 @@ class SiteController extends Controller
             ->join('INNER JOIN', 'projects', 'project_worker.id_project = projects.id_project')
             ->all();
 
-
         $reports = (new \yii\db\Query())
             ->select('*')
             ->from('reports')
             ->where(['id_user' => $current_user_id])
             ->join('INNER JOIN', 'projects', 'projects.id_project = reports.id_project')
             ->all();
+
         return $this->render('index', [
             'reports' => $reports,
             'user_datas' => $user_datas,
@@ -143,7 +148,7 @@ class SiteController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->renderAjax('login', [
+            return $this->render('login', [
                 'model' => $model,
             ]);
         }
@@ -183,6 +188,28 @@ class SiteController extends Controller
         }
     }
 
+    public function actionUpdate($id)
+    {
+        $model = \app\models\User::findOne($id);
+        if ($model->load(Yii::$app->request->post())) {
+            $imageName = $model->username.date('m');
+            if ( $model->validate()) {
+                $model->prof_image = UploadedFile::getInstance($model, 'prof_image');
+
+                if (!empty($model->prof_image)) {
+                    $model->prof_image->saveAs('uploads/users/' . $imageName . '.' . $model->prof_image->extension);
+                    $model->prof_image = 'uploads/users/' . $imageName . '.' . $model->prof_image->extension;
+                }
+                $model->save();
+                return $this->redirect('/');
+            }
+        }
+        return $this->render('workerupdate', [
+            'model' => $model,
+        ]);
+    }
+
+
     /**
      * Displays about page.
      *
@@ -204,12 +231,13 @@ class SiteController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
 
+            $model->prof_image = UploadedFile::getInstance($model, 'prof_image');
             $imageName = $model->username;
             if (!empty($model->prof_image)) {
-                $model->prof_image = UploadedFile::getInstance($model, 'prof_image');
                 $model->prof_image->saveAs('uploads/users/' . $imageName . '.' . $model->prof_image->extension);
                 $model->prof_image = 'uploads/users/' . $imageName . '.' . $model->prof_image->extension;
             }
+
             if ($user = $model->signup()) {
                $model->position=$user->position;
                 if (Yii::$app->getUser()->login($user)) {
@@ -233,12 +261,24 @@ class SiteController extends Controller
         }
     }
 
+    public function actionUservalidation()
+    {
+        $model = new \app\models\User();
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+            Yii::$app->response->format = 'json';
+            return ActiveForm::validate($model);
+        }
+    }
 
     public function actionProject()
     {
+        $customer_name=\app\models\User::find()->where(['position'=>'Customer'])->all();
+
         $project = Projects::find()->where(['id_project' => Yii::$app->request->get()['id_project']])->one();
         return $this->render('/site/project', [
             'project' => $project,
+            'customer_name'=>$customer_name,
+
         ]);
     }
 
@@ -289,5 +329,24 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Finds the SignupForm model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return SiteController the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+
+    protected function findModel($id)
+    {
+        $id = \Yii::$app->user->id;
+
+        if (($model = \backend\models\User::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 }

@@ -16,8 +16,7 @@ use Yii;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $first_name
- * @property string $last_name
+ * @property string $full_name
  * @property string $gender
  * @property string $dob
  * @property string $prof_image
@@ -44,7 +43,7 @@ class User extends \yii\db\ActiveRecord
             [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['dob', 'start_working_at'], 'safe'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'first_name', 'last_name', 'gender', 'prof_image', 'work_time', 'team','position','company_name'], 'string', 'max' => 255],
+            [['username', 'password_hash', 'password_reset_token', 'email', 'full_name', 'gender', 'prof_image', 'work_time', 'team','position'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
@@ -68,8 +67,7 @@ class User extends \yii\db\ActiveRecord
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'first_name' => 'First Name',
-            'last_name' => 'Last Name',
+            'first_name' => 'Full Name',
             'gender' => 'Gender',
             'dob' => 'Dob',
             'prof_image' => 'Prof Image',
@@ -77,7 +75,6 @@ class User extends \yii\db\ActiveRecord
             'team' => 'Team',
             'start_working_at' => 'Start Working At',
             'position' => 'Position',
-            'company_name' => 'Company Name',
         ];
     }
 }

@@ -4,66 +4,54 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
 use dosamigos\datepicker\DatePicker;
-
+use yii\helpers\ArrayHelper;
+use yii\db\Query;
 /* @var $this yii\web\View */
-/* @var $model frontend\models\SignupForm */
+/* @var $model frontend\models\Reports */
 /* @var $form ActiveForm */
-$this->title = 'Edit ' . $model->position . ' page';
+$this->title = 'Update today\'s report';
+$current_user_id=\Yii::$app->user->id;
+
+
 ?>
-<div style="display:flex;">
-    <div class="col-lg-8" style="margin: -10px auto">
-        <h1><?= Html::encode($this->title) ?></h1>
 
-        <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+<div class="reports-form">
 
-        <div class="form_imput_flex">
-            <div class="form_imput_items">
-                <?= $form->field($model, 'first_name')->textInput()->label('Name') ?>
-            </div>
-            <div style='width:51%'>
-                <?= $form->field($model, 'last_name')->textInput()->label('Surname') ?>
-            </div>
-        </div>
+    <?php $form = ActiveForm::begin([ 'enableClientValidation' => true,
+        'options'                => [
+            'id'      => 'dynamic-form'
+        ]]); ?>
 
-        <div class="form_imput_flex">
-            <div class="form_imput_items">
-                <?= $form->field($model, 'gender')->radioList(['Male' => 'Male', 'Female' => 'Female']); ?>
-            </div>
-            <div style='width:51%'>
-                <?= $form->field($model, 'prof_image')->fileInput()->label('Profile image') ?>
-            </div>
-        </div>
+<?php if (substr($model->report_day,0,10)==date('Y-m-d')){ ?>
 
-        <div class="form_imput_flex">
-            <div class="form_imput_items">
-                <?= $form->field($model, 'dob')->widget(
-                    DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']
-                ])->label('Date of birth') ?>
-            </div>
-            <div style='width:51%'>
-                <?= $form->field($model, 'start_working_at')->widget(
-                    DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']]
-                )->label('Start working at') ?>
-            </div>
-        </div>
+    <?= $form->field($model, 'id_project')->dropDownList(
+        ArrayHelper::map((new Query())
+            ->select('*')
+            ->from('project_worker')
+            ->where(['id_worker'=>$current_user_id])
+            ->join('INNER JOIN','projects', 'project_worker.id_project = projects.id_project')
+            ->all(), 'id_project', 'project_name'),['disabled' => true])
+            ->label('Project')  ?>
 
-        <div class="form_imput_flex">
-            <div class="form_imput_items">
-                <?= $form->field($model, 'work_time')->dropDownList(['Full time' => 'Full time', 'Half time' => 'Half time'], ['prompt' => 'Select...']) ?>
-            </div>
-            <div style='width:51%'>
-                <?= $form->field($model, 'team')->dropDownList(['WEB' => 'WEB', 'Mobile' => 'Mobile'], ['prompt' => 'Select...']) ?>
-            </div>
-        </div>
+    <?= $form->field($model, 'report_day')->textInput(['readonly' => true])?>
 
-        <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'description')->textarea(['rows' => 6])->label('Report text <span class="required_asterix">*</span>')  ?>
 
-        <?= $form->field($model, 'email') ?>
 
-        <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success adding_new_project' : 'btn btn-primary']) ?>
-        </div>
-        <?php ActiveForm::end(); ?>
-
+    <div style="display: none;">
+        <?= $model->working_time='1' ?>
     </div>
+    <?= $form->field($model, 'working_time')
+        ->radioList(['1'=>'Full day','0.5'=>'Half day'])
+        ->label('Working time <span class="required_asterix">*</span>')  ?>
+
+    <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
 </div>
+<?php }else{?>
+    <h2 class="alert alert-danger">You cannot edit<strong><a href="/reports/index" class="alert-link"> old reports!<a></strong></h2>
+<?php } ?>

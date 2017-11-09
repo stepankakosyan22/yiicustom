@@ -7,10 +7,12 @@
     border: 1px solid grey;
     padding: 5px;
     display: inline-table;
+    color:white;;
+    background-image: url('/uploads/bg/1.jpg');
 }
 .all_projects:hover{
-    background-color: whitesmoke;
-    color:black;
+    color:whitesmoke;
+    border: 1px solid white;
 }
 .adding_project_button{
     background-color: #101010;
@@ -36,7 +38,6 @@
 .projs:hover{
     text-decoration: none;
 }
-
 .project_datas, .project_datas_header{
     margin:0 0 10px;
     display: block;
@@ -57,27 +58,77 @@
     height:30px;
     font-size: 125%;
     caption-side: top;
-    color:black;
+    color:white;
     display: inline-block;
-    border-bottom: 3px solid black;
-
+    border-bottom: 3px solid white;
     margin-bottom: 4px;
     padding:5px;
 }
-
-
-/*table {*/
-    /*font-family: arial, sans-serif;*/
-    /*border-collapse: collapse;*/
-    /*width: 100%;*/
-/*}*/
-
-/*td, th {*/
-    /*border: 1px solid #dddddd;*/
-    /*text-align: left;*/
-    /*padding: 8px;*/
-/*}*/
-
-/*tr:nth-child(even) {*/
-    /*background-color: #dddddd;*/
-/*}*/
+.pagination{
+    margin: 0 auto;
+}
+.edit_delit_icon{
+    color:white;
+    margin: 2px;
+}
+.edit_delit_icon:hover{
+    color:papayawhip;
+}
+.logo_project{
+    width:99%;
+}
+.projects-form{
+    background-image: url("/uploads/bg/1.jpg");
+    padding:25px;
+}
+.site-login{
+    color:white;
+    width:57%;
+}
+.project_items{
+    display: flex;
+    padding:25px;
+    border: 1px solid white;
+    border-radius: 4px;
+    color:white;
+    background-image: url("/uploads/bg/1.jpg");
+}
+.report_table{
+    background-image: url("/uploads/bg/1.jpg");
+    color: whitesmoke;
+}
+.projects-update{
+    color:white;
+    padding: 25px;
+    background-image: url("/uploads/bg/1.jpg");
+}
+.proj_icons{
+   display: flex;
+    float:right;
+    font-size: 150%;
+}
+.proj_item_colollapse{
+    text-align: left;
+    width: 100%;
+    height:73px;
+    margin-bottom: 5px;
+    background-size: cover;
+    background-image: url("/uploads/bg/1.jpg");
+    color:whitesmoke;
+    font-size: 150%;
+}
+.proj_item_colollapse:hover{
+    background-color: deepskyblue;
+    color:white;
+}
+.user_img_circle{
+    width:60px;
+    height:60px;
+}
+.projects-create{
+    background-color: transparent;
+    color: white;
+    width:70%;
+    border-radius: 10px;
+    padding:15px;
+}

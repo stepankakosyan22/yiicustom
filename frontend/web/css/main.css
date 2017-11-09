@@ -3,22 +3,25 @@
     border-collapse: collapse;
     width: 100%;
 }
-.adding_project_button{
+
+.adding_project_button {
     background-color: #101010;
     font-size: 130%;
-    width:10%;
+    width: 10%;
     position: fixed;
-    left:2px;
-    top:40%
+    left: 2px;
+    top: 40%
 }
-.adding_project_button_a{
+
+.adding_project_button_a {
     text-decoration: none;
     color: whitesmoke;
 }
 
-.adding_project_button:hover{
-    color:navajowhite;
+.adding_project_button:hover {
+    color: navajowhite;
 }
+
 .report_td, .report_th {
     border: 1px solid #dddddd;
     text-align: left;
@@ -34,21 +37,23 @@
     color: black;
 }
 
-.user_datas, .user_projects{
+.user_datas, .user_projects {
     border: 1px solid #ccc;
     border-radius: 4px;
-    padding:25px;
+    padding: 25px;
 }
-.user_datas, .project_item{
-    display:flow-root;
+
+.user_datas, .project_item {
+    display: flow-root;
 }
-.user_data_items>div, .user_projects>div, .project_item>div{
-    margin:0 0 10px;
+
+.user_data_items > div, .user_projects > div, .project_item > div {
+    margin: 0 0 10px;
     display: block;
-    color:#333;
+    color: #333;
     padding: 9px;
-    width:73%;
-    float:right;
+    width: 73%;
+    float: right;
     word-break: break-all;
     word-wrap: break-word;
     background-color: #f5f5f5;
@@ -70,27 +75,30 @@
     padding: 25px;
     border-radius: 4px;
 }
-.user_projects>a{
+
+.user_projects > a {
     text-decoration: none;
 }
-.user_projects{
-    display:flex;
+
+.user_projects {
+    display: flex;
 }
+
 .user_project_datas {
     font-size: 25px;
     padding: 10px;
-    margin:3px;
-    width:30%;
+    margin: 3px;
+    width: 30%;
     display: inline-table;
     text-align: center;
     background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    color:black;
+    border: 1px solid #46b8da;
+    color: black;
 }
 
-.user_project_datas:hover{
-    color: dimgrey;
-
+.user_project_datas:hover {
+    color: #46b8da;
+    text-decoration: none;
 }
 
 .project_item {
@@ -98,61 +106,15 @@
     padding: 25px;
 }
 
-.project_datas{
+.project_datas {
     font-size: 18px;
-    width:50%;
+    width: 50%;
 }
-
-.signup_button, .login_button{
-    background-color: hsl(0, 100%, 18%);
-    font-size: 250%;
-    padding:30px 40px;
-    width:25%;
-}
-.login_button,.signup_button{
-    margin:70px;
-}
-
-.signup_button:hover, .login_button:hover{
-    background-color: hsl(0, 98%, 24%);
-    color:whitesmoke;
-}
-
-/*.report_added_button {*/
-    /*background-color: #101010;*/
-    /*font-size: 130%;*/
-    /*color:whitesmoke;*/
-    /*padding:5px;*/
-    /*border-radius: 4px;*/
-/*}*/
-
-
-
-/*.report_added_button:hover {*/
-    /*background-color: white;*/
-    /*color: black;*/
-/*}*/
-
-/*.report_added_button {*/
-    /*background-color: #555555;*/
-    /*color: white;*/
-
-    /*border: 2px solid #555555;*/
-    /*padding: 16px 32px;*/
-    /*text-align: center;*/
-    /*text-decoration: none;*/
-    /*display: inline-block;*/
-    /*font-size: 16px;*/
-    /*margin: 4px 2px;*/
-    /*-webkit-transition-duration: 0.4s; !* Safari *!*/
-    /*transition-duration: 0.4s;*/
-    /*cursor: pointer;*/
-/*}*/
 
 .report_added_button {
     display: inline-block;
     border-radius: 4px;
-    background-color: black;
+    background-color: #46b8da;
     color: white;
     text-align: center;
     padding: 10px;
@@ -184,4 +146,102 @@
 .report_added_button:hover span:after {
     opacity: 1;
     right: 0;
+}
+
+.project_title {
+    padding: 15px;
+    font-size: 180%;
+    margin: 4px;
+    text-align: center;
+    background-color: #46b8da;
+    color: whitesmoke;
+    cursor: default;
+}
+
+.form_imput_flex {
+    display: flex;
+}
+
+.form_imput_items {
+    width: 48%;
+    margin-right: 5px;
+    float: left;
+}
+
+.worker_edit_button {
+    font-size: 225%;
+    float: right;
+    margin: -15px;
+}
+
+.worker_edit_button:hover {
+    color: #46b8da;
+}
+
+.required_asterix {
+    color: red;
+    font-size: 110%;
+}
+
+.user_proj_items{
+    padding:25px;
+    max-height: 300px;
+    border: 1px solid black;
+    border-radius:4px;
+    display: flex;
+}
+
+.user_proj_items_logo{
+    float:left;
+    width:24%;
+    display:flex;
+}
+
+.table_header_tr{
+    color: white;
+    background-color: #46b8da;
+    font-size: x-large;
+}
+
+.forgot_pass_p{
+    color:#999;
+    margin:1em 0;
+    font-size: 90%;
+}
+
+.customer_coollapse_div{
+   text-align: left;
+    width: 100%;
+    height:73px;
+    margin-bottom: 5px;
+    font-size: 150%;
+}
+
+.customer_coollapse_img{
+   width:60px;
+    height:60px;
+}
+
+.works_of_proj{
+    border-bottom: 2px solid black;
+    width:50%
+}
+
+.table_fullname{
+    color: white;
+    background-color: #46b8da;
+    font-size: 125%;
+}
+
+.rep_add_btn{
+    display:inline-block;
+    padding-bottom: 15px;
+}
+
+.default_page{
+    background-image: url("uploads/users/profess.png");
+}
+
+.login_button{
+    margin-bottom: 12%;
 }

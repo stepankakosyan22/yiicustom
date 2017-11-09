@@ -6,7 +6,6 @@
  * Time: 11:27 AM
  */
 
-use frontend\controllers\UserController;
 use yii\helpers\Url;
 use app\models\Projects;
 use app\models\Reports;
@@ -20,14 +19,45 @@ $reports = Reports::find()
     ->all();
 ?>
 <?php if ($project) { ?>
-    <div class="project_item">
-
-        <div style="font-size: 25px;text-align: center;width:100%"><?= $project->project_name ?></div>
-            <img style="width:26%;float:left" src="<?php echo Yii::$app->urlManagerBackend->baseUrl; ?>/<?= $project->logo ?>">
-            <div class="project_datas">Estimated days to finish of project: <?= $project->edf ?></div>
-            <div class="project_datas">Project started at: <?= $project->start_date ?></div>
-            <div class="project_datas">Project should end at:<?= $project->end_date ?></div>
-            <div class="project_datas">Customer of project: <?= $project->customer ?></div>
+    <div class="user_proj_items">
+        <div class="user_proj_items_logo">
+            <?php if ($project->logo){ ?>
+                <img style="width:100%"
+                     src="<?php echo Yii::$app->urlManagerBackend->baseUrl; ?>/<?= $project->logo ?>">
+            <?php } else { ?>
+                <img style="width: 100%" src="<?php echo Yii::$app->urlManagerBackend->baseUrl; ?>/uploads/Project.png">
+            <?php } ?>
+        </div>
+        <div style="width:65%;margin-left: 5%">
+            <table  class="table table-sm table-inverse">
+                <tr class="table_header_tr">
+                    <td colspan="5"><?= $project->project_name ?></td>
+                </tr>
+                <?php if ($project->edf){?>
+                <tr>
+                    <td>Estimated days to finish of project:</td>
+                    <td><?= $project->edf ?> day</td>
+                </tr>
+                <?php } ?>
+                <tr>
+                    <td>Project started at:</td>
+                    <td><?= $project->start_date ?></td>
+                </tr>
+                <?php if ($project->end_date){?>
+                    <tr>
+                        <td>Project should end at:</td>
+                        <td><?= $project->end_date ?></td>
+                    </tr>
+                <?php } ?>
+                <tr>
+                    <td>Customer of project:</td>
+                    <?php foreach ($customer_name as $cus_name){
+                        if ($cus_name['id']==$project->customer){?>
+                            <td><?= $cus_name['full_name'] ?></td>
+                        <?php }}?>
+                </tr>
+            </table>
+        </div>
     </div>
 <?php } ?>
 

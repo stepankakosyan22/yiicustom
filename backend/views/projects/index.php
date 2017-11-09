@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use backend\models\ProjectWorker;
+use backend\models\User;
 
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\ProjectsSearch */
@@ -27,8 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'edf',
                 'start_date',
                 'end_date',
-                'customer',
-                'logo',
 
                 ['class' => 'yii\grid\ActionColumn'],
             ],

@@ -12,17 +12,14 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-    public $first_name;
-    public $last_name;
+    public $full_name;
     public $gender;
     public $dob;
     public $prof_image;
     public $work_time;
     public $team;
     public $position;
-    public $company_name;
     public $start_working_at;
-
 
     /**
      * @inheritdoc
@@ -41,18 +38,17 @@ class SignupForm extends Model
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
 
+            [['gender','dob','team','start_working_at'],'string'],
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
-            ['first_name', 'string'],
-            ['last_name', 'string'],
-            ['gender', 'string'],
-            ['dob', 'string'],
+            [['full_name'], 'string','min'=>2,'max'=>20],
+            [['full_name'], 'required'],
+            [['full_name'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/i'],
             ['dob', 'validateBirthday'],
+            ['prof_image', 'file','skipOnEmpty' => true, 'extensions' => 'jpeg, png, jpg'],
+
             ['work_time', 'string'],
-            ['team', 'string'],
-            ['position', 'required'],
-            ['company_name', 'string'],
-            ['start_working_at', 'string'],
+            ['position', 'required','message'=>'You must choose one of them.'],
             ['start_working_at', 'validateDates'],
         ];
     }
@@ -66,6 +62,7 @@ class SignupForm extends Model
             }
         }
     }
+
     public function validateBirthday($attribute, $params, $validator)
     {
         $model = new SignupForm();
@@ -90,8 +87,7 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->first_name = $this->first_name;
-        $user->last_name = $this->last_name;
+        $user->full_name = $this->full_name;
         $user->gender = $this->gender;
         $user->dob=$this->dob;
         $user->prof_image=$this->prof_image;
@@ -99,7 +95,6 @@ class SignupForm extends Model
         $user->team=$this->team;
         $user->start_working_at=$this->start_working_at;
         $user->position=$this->position;
-        $user->company_name=$this->company_name;
 
         $user->setPassword($this->password);
         $user->generateAuthKey();

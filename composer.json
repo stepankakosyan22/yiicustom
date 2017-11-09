@@ -21,7 +21,8 @@
         "2amigos/yii2-date-picker-widget": "*",
         "kartik-v/yii2-widget-select2": "*",
         "yiisoft/yii2-debug": "^2.0",
-        "kartik-v/yii2-widget-fileinput": "*"
+        "kartik-v/yii2-widget-fileinput": "*",
+        "bizley/migration": "^2.2"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "~2.0.0",

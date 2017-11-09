@@ -20,7 +20,6 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->language ?>">
 
 <head>
-    <link rel="shortcut icon" href="<?php echo Yii::getAlias('@web'); ?>/uploads/favicon.ico">
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,42 +31,79 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-
-    <?php if(Yii::$app->user->identity->position=="Worker"){
-        NavBar::begin([
-            'brandLabel' => Yii::$app->user->identity->position . ' ' . Yii::$app->user->identity->first_name . ' ' . Yii::$app->user->identity->last_name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
-            ],
-        ]);
-    }elseif(Yii::$app->user->identity->position=="Customer"){
-        NavBar::begin([
-            'brandLabel' => Yii::$app->user->identity->position . ' ' . Yii::$app->user->identity->company_name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
-            ],
-        ]);
-    }
-
-    ?>
-
     <?php
-
+    NavBar::begin([
+        'brandLabel' => Yii::$app->user->identity->position . ' ' . Yii::$app->user->identity->full_name,
+        'brandUrl' => Yii::$app->homeUrl,
+        'options' => [
+            'class' => 'navbar-inverse navbar-fixed-top',
+        ],
+    ]);
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/'], 'post')
+            .Html::submitButton(
+                ' Home',
+                ['class' => 'btn-link logout glyphicon glyphicon-home']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/site/signup'], 'post')
+            .Html::submitButton(
+                ' Signup',
+                ['class' => 'btn-link logout glyphicon glyphicon-log-in']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/site/login'], 'post')
+            .Html::submitButton(
+                ' Login',
+                ['class' => 'btn-link logout glyphicon glyphicon-log-in']
+            )
+            . Html::endForm()
+            . '</li>';
+    } elseif(Yii::$app->user->identity->position=='Worker') {
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/site/index'], 'post')
+            .Html::submitButton(
+                ' Home',
+                ['class' => 'btn-link logout glyphicon glyphicon-home']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/reports/index'], 'post')
+            .Html::submitButton(
+                ' Reports',
+                ['class' => 'btn-link logout glyphicon glyphicon-comment']
+            )
+            . Html::endForm()
+            . '</li>';
 
-    } else {
-        $menuItems[] = ['label' => 'Home', 'url' => ['/site/index']];
-if (Yii::$app->user->identity->position=="Worker"){
-    $menuItems[] = ['label' => 'Reports', 'url' => ['/reports/index']];
-}
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                'Logout',
-                ['class' => 'btn btn-link logout']
+                ' Logout',
+                ['class' => 'btn-link logout glyphicon glyphicon-log-out']
+            )
+            . Html::endForm()
+            . '</li>';
+    } else{
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/site/index'], 'post')
+            .Html::submitButton(
+                ' Home',
+                ['class' => 'btn-link logout glyphicon glyphicon-home']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[] = '<li>'
+            . Html::beginForm(['/site/logout'], 'post')
+            . Html::submitButton(
+                ' Logout',
+                ['class' => 'btn-link logout glyphicon glyphicon-log-out']
             )
             . Html::endForm()
             . '</li>';
