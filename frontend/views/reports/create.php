@@ -7,8 +7,6 @@ use yii\helpers\Html;
 /* @var $model app\models\Reports */
 
 $this->title = 'Add Reports';
-$this->params['breadcrumbs'][] = ['label' => 'Reports', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="reports-create">
     <?= $this->render('_form', [

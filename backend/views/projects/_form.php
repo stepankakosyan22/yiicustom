@@ -20,35 +20,44 @@ $this->title = 'New project';
 <div class="projects-form" style="display: flex;">
 
     <div class="col-lg-12" style="margin: 0 auto">
-        <?php if (!$developers){ ?>
+
+        <?php if (!$model->project_name) { ?>
             <h1><?= Html::encode($this->title) ?></h1>
         <?php } ?>
+
         <?php $form = ActiveForm::begin(
             [
                 'options' => ['enctype' => 'multipart/form-data'],
                 'enableAjaxValidation' => true,
-                'validationUrl' => Url::to('/projects/validation')]); ?>
+                'validationUrl' => Url::to('/projects/validation')]);
+        ?>
 
-        <?= $form->field($model, 'project_name')->textInput(['maxlength' => true])->label('Project name<span style="color:red;font-size: 125%">*</span>') ?>
+
+        <?= $form->field($model, 'project_name')
+            ->textInput(['maxlength' => true])
+            ->label('Project name <span style="color:red;font-size: 125%">*</span>') ?>
 
         <?= $form->field($model, 'edf')->textInput() ?>
 
-        <?= $form->field($model, 'start_date')->widget(
-            DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd',]
-        ])->label('Start date<span style="color:red;font-size: 125%">*</span>') ?>
+        <?= $form->field($model, 'start_date')->textInput(['id' => 'start_date']) ?>
 
-        <?= $form->field($model, 'end_date')->widget(
-            DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd',]
-        ]) ?>
+        <?= $form->field($model, 'end_date')->textInput(['id' => 'end_date']) ?>
 
         <?= $form->field($model, 'customer')->dropDownList(ArrayHelper::map(User::find()
             ->where(['position' => 'Customer'])
-            ->all(), 'id', "full_name"),['prompt'=>'Select customer'])->label('Choose customer<span style="color:red;font-size: 125%">*</span>') ?>
+            ->all(), 'id', "full_name"), ['prompt' => 'Select customer'])->label('Choose customer <span style="color:red;font-size: 125%">*</span>') ?>
 
-        <?= $form->field($model, 'logo')->fileInput(['style' => 'width:100%;border:1px solid #ccc;padding:5px;border-radius:4px']) ?>
+        <div style="display: flex">
+            <?php if ($model->logo) { ?>
+                <img style="width:70px;height: 70px; float: right;background-color: whitesmoke;margin-right: 7px;"
+                     class="img-circle" src="/<?= $model->logo ?>"/>
+            <?php } ?>
+
+            <?= $form->field($model, 'logo')->fileInput(['style' => 'width:100%;border:1px solid #ccc;padding:5px;border-radius:4px']) ?>
+        </div>
 
         <button type="button"
-                style="width: 100%;margin-bottom: 5px;background-color: forestgreen;color:whitesmoke"
+                style="width: 100%;margin-bottom: 5px;background-color: #1b6d85;color:whitesmoke"
                 class="btn workers_added_button"
                 data-toggle="collapse"
                 data-target="#demo"
@@ -57,13 +66,13 @@ $this->title = 'New project';
         </button>
         <br>
         <?php
-        if($developers){
-            $users=ArrayHelper::map(User::find()
+        if (isset($developers)) {
+            $users = ArrayHelper::map(User::find()
                 ->andWhere(['position' => 'Worker'])
                 ->all(), 'id', "full_name");
-            $workerList=[];
+            $workerList = [];
             foreach ($developers as $worker) {
-                array_push($workerList,$worker['id_worker']);
+                array_push($workerList, $worker['id_worker']);
                 $workers->id_worker = $workerList;
             }
         }
@@ -77,11 +86,12 @@ $this->title = 'New project';
                     ->groupBy('full_name')
                     ->all(), 'id', "full_name"), ['class' => 'workers'])->label('') ?>
         </div>
+
         <br>
 
         <div class="pull-right">
             <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update',
-                ['id'=>'button_id','class' => $model->isNewRecord
+                ['id' => 'button_id', 'class' => $model->isNewRecord
                     ? 'btn btn-success adding_new_project'
                     : 'btn btn-primary']) ?>
         </div>

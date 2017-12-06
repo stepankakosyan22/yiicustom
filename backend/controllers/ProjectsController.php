@@ -74,26 +74,31 @@ class ProjectsController extends Controller
     {
         $model = $this->findModel($id);
         $model->scenario = 'update_project';
-        $developers=ProjectWorker::find()->where(['id_project'=>$model->id_project])->all();
+        $developers = ProjectWorker::find()->where(['id_project' => $model->id_project])->all();
 
-        $users=User::find()->all();
+        $users = User::find()->all();
         $worker = new ProjectWorker();
         $worker_ids = Yii::$app->request->post();
-
-
-
+        $existing_logo=$model['logo'];
         if ($model->load(Yii::$app->request->post())) {
-            foreach ($developers as $developer){
+            foreach ($developers as $developer) {
                 $developer->delete();
             }
-            $imageName = $model->project_name;
+
+            $proj_name=Yii::$app->request->post();
+            $model->project_name=$proj_name['Projects']['project_name'];
             $model->logo = UploadedFile::getInstance($model, 'logo');
-            if (!empty($model->logo)) {
-                $model->logo->saveAs('uploads/logo/' . $imageName . '.' . $model->logo->extension);
-                $model->logo = 'uploads/logo/' . $imageName . '.' . $model->logo->extension;
+            if ($model['logo']) {
+                $imageName = $proj_name['Projects']['project_name'];
+                if (!empty($model->logo)) {
+                    $model->logo->saveAs('uploads/logo/' . $imageName . '.' . $model->logo->extension);
+                    $model->logo = 'uploads/logo/' . $imageName . '.' . $model->logo->extension;
+                }
+            } else {
+                $model->logo = $existing_logo;
             }
             $model->save();
-            if($worker_ids['ProjectWorker']['id_worker'] ){
+            if ($worker_ids['ProjectWorker']['id_worker']) {
                 foreach ($worker_ids['ProjectWorker']['id_worker'] as $id_worker) {
                     $workers = new ProjectWorker();
                     if (!($workers->id_project == $model->id_project && $workers->id_worker == $id_worker)) {
@@ -111,7 +116,7 @@ class ProjectsController extends Controller
                 'model' => $model,
                 'workers' => $worker,
                 'developers' => $developers,
-                'users'=>$users
+                'users' => $users
             ]);
         }
     }
@@ -129,17 +134,17 @@ class ProjectsController extends Controller
         $worker_ids = Yii::$app->request->post();
         $worker = new ProjectWorker();
 
-        if ($model->load(Yii::$app->request->post()) && isset($worker_ids['ProjectWorker']) && isset($worker_ids['ProjectWorker']['id_worker'])) {
+        if ($model->load(Yii::$app->request->post()) &&
+            isset($worker_ids['ProjectWorker']) &&
+            isset($worker_ids['ProjectWorker']['id_worker'])) {
             $imageName = $model->project_name;
-
             $model->logo = UploadedFile::getInstance($model, 'logo');
-
             if (!empty($model->logo)) {
                 $model->logo->saveAs('uploads/logo/' . $imageName . '.' . $model->logo->extension);
                 $model->logo = 'uploads/logo/' . $imageName . '.' . $model->logo->extension;
-
             }
             $model->save();
+
             if (!empty($worker_ids['ProjectWorker']['id_worker'])) {
                 foreach ($worker_ids['ProjectWorker']['id_worker'] as $id_worker) {
                     $workers = new ProjectWorker();
@@ -176,6 +181,7 @@ class ProjectsController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+
         return $this->redirect(['/site/index']);
     }
 

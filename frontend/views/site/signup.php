@@ -36,6 +36,7 @@ $this->title = 'Signup';
             ->label('
                     <span class="full_name" style="display:none">Full </span><span class="company_name"  style="display:none">Company </span> 
                     Name<span class="required_asterix">*</span>') ?>
+
         <?= $form->field($model, 'username')->textInput()->label('Username <span class="required_asterix">*</span>') ?>
 
         <?= $form->field($model, 'email')->textInput()->label('E-mail <span class="required_asterix">*</span>') ?>

@@ -24,7 +24,7 @@ $this->title = 'Login';
                     'class' => 'form-group field-loginform-username has-feedback required '
                 ],
                 'template' => '{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'])
-                ->textInput(['autofocus' => true, 'placeholder' => 'Username']) ?>
+                ->textInput(['autofocus' => false, 'placeholder' => 'Username']) ?>
 
             <?= $form->field($model, 'password', ['options' =>
                 [

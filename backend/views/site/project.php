@@ -16,7 +16,6 @@ $this->title = $project->project_name;
 
 ?>
 <div>
-    <div class="header_of_items">Project</div>
 
     <div class="project_items">
         <div style="float:left;width:25%">
@@ -28,14 +27,14 @@ $this->title = $project->project_name;
         </div>
 
     <table style="width:75%"  class="table table-sm table-inverse">
-        <tr style="color: white;border: none">
+        <tr style="border: none">
             <td colspan="2" style="font-size: 180%"><?= $project->project_name ?></td>
             <td style="font-size: 125%">
                 <div class="proj_icons">
                     <a style="line-height: 0.5" href="/projects/update/<?= $project->id_project ?>">
                         <span class="edit_delit_icon glyphicon glyphicon-edit"  title="Edit"> </span>
                     </a>
-                    <?= Html::a('  <span class="edit_delit_icon glyphicon glyphicon-trash" title="Remove"></span>',
+                    <?= Html::a('  <span class="edit_delit_icon glyphicon glyphicon-trash" title="Delete"></span>',
                         ['/projects/delete', 'id' => $project->id_project], [
                         'data' => [
                             'confirm' => 'Are you sure you want to delete this item?',
@@ -76,8 +75,11 @@ $this->title = $project->project_name;
 </div>
 
 </div>
+<?php if ($workers_of_project){ ?>
 <div class="header_of_items">Workers</div>
+
 <?php foreach ($workers_of_project as $worker) { ?>
+
     <div
             class="btn btn-default proj_item_colollapse"
             data-toggle="collapse"
@@ -97,7 +99,9 @@ $this->title = $project->project_name;
     </div>
 
     <div class="reports<?= $worker['id'] ?> collapse">
-        <?php if ($reports) {
+        <?php if (!$reports){ ?>
+            <div><?=$worker['full_name'] ?> hasn't put any report yet.</div>
+        <?php }else {
             $infoExists[$worker['id']] = false; ?>
             <?php foreach ($reports as $rep) {
                 if ($rep['id_user'] == $worker['id']) {
@@ -107,6 +111,7 @@ $this->title = $project->project_name;
             if ($infoExists[$worker['id']]) {
                 ?>
                 <div class="header_of_items">Daily reports</div>
+
                 <table class="table table-bordered report_table">
                     <thead>
                         <tr>
@@ -120,24 +125,27 @@ $this->title = $project->project_name;
                         if ($report['id_user'] == $worker['id']) {
                             ?>
                             <tbody>
-                            <tr>
-                                <td><?= $report['report_day'] ?></td>
-                                <?php if ($report['working_time'] == '1') { ?>
-                                    <td>Full day</td>
-                                <?php } else { ?>
-                                    <td>Half day</td> <?php } ?>
-                                <td><?= $report['description'] ?></td>
-                            </tr>
+                                <tr>
+                                    <td><?= $report['report_day'] ?></td>
+                                    <?php if ($report['working_time'] == '1') { ?>
+                                        <td>Full day</td>
+                                    <?php } else { ?>
+                                        <td>Half day</td> <?php } ?>
+                                    <td><?= $report['description'] ?></td>
+                                </tr>
                             </tbody>
                         <?php }
                     } ?>
                 </table>
             <?php } else {
                 ?>
-                <div style="text-align: center;color: white"><?= $worker['full_name'] ?> hasn't put any report yet.</div>
+                <div style="text-align: center"><?= $worker['full_name'] ?> hasn't put any report yet.</div>
             <?php } ?>
             <br>
         <?php } ?>
     </div>
 <?php } ?><br>
 
+<?php } else{?>
+    <div>There is no workers assigned to this project yet. <a href="/projects/update/<?= $project->id_project ?>">Edit</a> project for adding workers! </div>
+<?php }?>

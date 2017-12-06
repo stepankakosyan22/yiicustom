@@ -26,6 +26,7 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public $password;
     /**
      * @inheritdoc
      */
@@ -40,16 +41,28 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'integer'],
-            [['dob', 'start_working_at'], 'safe'],
-            [['username', 'password_hash', 'password_reset_token', 'email', 'full_name', 'gender', 'prof_image', 'work_time', 'team','position'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
-            [['company_name'], 'unique'],
+            [['username','full_name','password','position'],'required','on'=>'create'],
+            [['username','full_name','position'],'required','on'=>'update'],
+            ['username', 'trim'],
+            ['username', 'string', 'min' => 6, 'max' => 255],
+            [['username'], 'match', 'pattern' => '/^[a-zA-Z0-9\!\@\#\$\&\*\_\+\+\-\.]+$/i',
+                'message'=>'Username must have letters, numbers or those symbols (! @ # $ & * _ + - .)'],
+
+            ['password', 'string', 'min' => 6,'on'=>'create'],
+            [['password'], 'match', 'pattern' => '/^[a-zA-Z0-9\!\@\#\$\&\*\_\+\+\-\.]+$/i',
+                'message'=>'Password must have English letters, numbers or those symbols (! @ # $ & * _ + - .)'],
+            [['full_name'], 'string','min'=>2,'max'=>20],
+            [['full_name'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/i'],
+            ['position', 'required','message'=>'You must choose one of them.'],
         ];
+    }
+
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['update'] = ['full_name','username','password','position'];
+        $scenarios['create'] = ['full_name','username','password','position'];
+        return $scenarios;
     }
 
     /**
@@ -63,18 +76,25 @@ class User extends \yii\db\ActiveRecord
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'first_name' => 'Full Name',
-            'gender' => 'Gender',
-            'dob' => 'Dob',
-            'prof_image' => 'Prof Image',
-            'work_time' => 'Work Time',
-            'team' => 'Team',
-            'start_working_at' => 'Start Working At',
+            'full_name' => 'Full Name',
             'position' => 'Position',
         ];
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+    /**
+     * Generates "remember me" authentication key
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 }

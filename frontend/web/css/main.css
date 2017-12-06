@@ -38,7 +38,8 @@
 }
 
 .user_datas, .user_projects {
-    border: 1px solid #ccc;
+    border: 1px solid  #46b8da;
+;
     border-radius: 4px;
     padding: 25px;
 }
@@ -93,12 +94,12 @@
     text-align: center;
     background-color: #f5f5f5;
     border: 1px solid #46b8da;
-    color: black;
+    color: #46b8da;
 }
 
 .user_project_datas:hover {
-    color: #46b8da;
-    text-decoration: none;
+    color: #2aabd2;
+    border: 1px solid #2aabd2;
 }
 
 .project_item {
@@ -149,13 +150,24 @@
 }
 
 .project_title {
-    padding: 15px;
-    font-size: 180%;
-    margin: 4px;
     text-align: center;
-    background-color: #46b8da;
     color: whitesmoke;
     cursor: default;
+    display: flex;
+}
+
+.add_report_white{
+    float:left;
+    width:12%;
+    text-align: left;
+}
+
+.proj_title{
+    width:92%;
+    float:right;
+    text-align: center;
+    font-size: 200%;
+    background-color: #46b8da;
 }
 
 .form_imput_flex {
@@ -235,13 +247,29 @@
 
 .rep_add_btn{
     display:inline-block;
-    padding-bottom: 15px;
+    padding: 15px;
+    color: #2aabd2;
+    font-size: larger;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #2aabd2;
+    background-color: white;
 }
-
+.rep_add_btn:hover{
+    color: whitesmoke;
+    background-color: deepskyblue;
+    text-decoration: none;
+}
 .default_page{
     background-image: url("uploads/users/profess.png");
 }
 
 .login_button{
     margin-bottom: 12%;
+}
+
+.work_upd_pp{
+    width:40%;
+    float:right;
+    margin:10px;
 }

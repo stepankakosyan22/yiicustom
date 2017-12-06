@@ -93,18 +93,18 @@ class ReportsController extends Controller
     public function actionCreate()
     {
         $model = new Reports();
+        $model->scenario='create_report';
 
         if ($model->load(Yii::$app->request->post())) {
-
             $model->report_day = date('Y-m-d h:m:s');
             $model->id_user=\Yii::$app->user->id;
-            $model->save();
-            return $this->redirect(['index']);
-        } else {
-            return $this->renderAjax('create', [
-                'model' => $model,
-            ]);
+            if ($model->validate()){
+                $model->save();
+                return $this->redirect(['index']);
+            }
         }
+
+        return $this->render('create', ['model' => $model,]);
     }
 
     /**

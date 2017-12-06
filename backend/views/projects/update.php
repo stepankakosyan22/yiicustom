@@ -7,7 +7,6 @@ use yii\helpers\Html;
 /* @var $workers backend\models\ProjectWorker */
 
 $this->title = 'Edit Project: ' . $model->id_project;
-
 ?>
 <div class="projects-update">
 

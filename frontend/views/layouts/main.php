@@ -33,7 +33,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->user->identity->position . ' ' . Yii::$app->user->identity->full_name,
+        'brandLabel' => 'Report Board',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -45,14 +45,6 @@ AppAsset::register($this);
             .Html::submitButton(
                 ' Home',
                 ['class' => 'btn-link logout glyphicon glyphicon-home']
-            )
-            . Html::endForm()
-            . '</li>';
-        $menuItems[]= '<li>'
-            . Html::beginForm(['/site/signup'], 'post')
-            .Html::submitButton(
-                ' Signup',
-                ['class' => 'btn-link logout glyphicon glyphicon-log-in']
             )
             . Html::endForm()
             . '</li>';
@@ -78,6 +70,14 @@ AppAsset::register($this);
             .Html::submitButton(
                 ' Reports',
                 ['class' => 'btn-link logout glyphicon glyphicon-comment']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[]= '<li>'
+            . Html::beginForm(['/checkin/index'], 'post')
+            .Html::submitButton(
+                ' Checkin',
+                ['class' => 'btn-link logout glyphicon glyphicon-time']
             )
             . Html::endForm()
             . '</li>';

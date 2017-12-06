@@ -62,7 +62,7 @@ return [
 
         'urlManagerBackend' => [
             'class' => 'yii\web\urlManager',
-            'baseUrl' => 'http://adminside.loc',  //i.e. $_SERVER['DOCUMENT_ROOT'] .'/yiiapp/web/'
+            'baseUrl' => 'http://reportadmin.local',  //i.e. $_SERVER['DOCUMENT_ROOT'] .'/yiiapp/web/'
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],

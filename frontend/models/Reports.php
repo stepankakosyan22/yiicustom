@@ -32,6 +32,7 @@ class Reports extends \yii\db\ActiveRecord
         return [
             [['id_project', 'id_user', 'report_day', 'description','working_time'], 'required'],
             [['id_project', 'id_user'], 'integer'],
+            ['id_project','validateReportDates','on'=>'create_report'],
             [['report_day'], 'safe'],
             [['description'], 'required'],
             [['working_time'], 'string'],
@@ -51,6 +52,28 @@ class Reports extends \yii\db\ActiveRecord
             'description' => 'Description',
             'working_time' => 'Working Day',
         ];
+    }
+    public function validateReportDates($attribute, $params, $validator)
+    {
+        $model = new Reports();
+        $items=Yii::$app->request->post();
+        $existing_reports=Reports::find()
+            ->andWhere(['id_project'=>$items['Reports']['id_project']])
+            ->andWhere(['id_user'=>Yii::$app->user->id])
+            ->all();
+            if ($model->load(\Yii::$app->request->post())) {
+                foreach ($existing_reports as $ex_rep){
+                    if ($existing_reports && substr($ex_rep['report_day'],0,10)==date('Y-m-d')) {
+                        $this->addError($attribute,'Today you already taken report for this project!');
+                }
+            }
+        }
+    }
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios['create_report'] = ['id_project','id_user','report_day','description','working_time'];
+        return $scenarios;
     }
     /**
      * @return \yii\db\ActiveQuery

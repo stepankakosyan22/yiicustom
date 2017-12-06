@@ -60,23 +60,10 @@ $this->title = 'Reports';
                 </tr>
             <?php }?>
         <?php } ?>
-        <div class="rep_add_btn">
-
-            <?= Html::button('<span>Add Reports</span>',
-                ['value' => Url::to('/reports/create'),
-                    'class' => 'report_added_button',
-                    'style' => 'vertical-align:middle',
-                    'id' => 'reportModalButton']) ?>
+        <div>
+            <?= Html::a('<span  class="rep_add_btn">Add Reports</span>',[Url::to('/reports/create')]
+                    ) ?>
         </div>
-        <?php
-        Modal::begin([
-            'header' => '<h2>Today\'s report</h2>',
-            'id' => 'modal',
-            'size' => 'modal-lg',
-        ]);
-        echo '<div id="reportModalContent"></div>';
-        Modal::end();
-        ?>
     </table>
     <div style="display: flex">
         <div style="margin:0 auto">
@@ -90,21 +77,10 @@ $this->title = 'Reports';
 <?php } else { ?>
 
     <div style="width:100%;text-align: center">
-        <?= Html::button('<span>Add your first report</span>',
-            ['value' => Url::to('create'),
-                'class' => 'report_added_button',
-                'style' => 'vertical-align:middle;font-size:150%;width:35%',
-                'id' => 'reportModalButton']) ?>
+        <?= Html::a('<span  class="rep_add_btn">Add your first report</span>',
+            [Url::to('create')]) ?>
     </div>
-    <?php
-    Modal::begin([
-        'header' => '<h2>Today\'s report</h2>',
-        'id' => 'modal',
-        'size' => 'modal-lg',
-    ]);
-    echo '<div id="reportModalContent"></div>';
-    Modal::end();
-    ?>
+
 <?php } ?>
 </div>
 

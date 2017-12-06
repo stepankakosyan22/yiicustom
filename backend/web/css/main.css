@@ -2,20 +2,19 @@
     display: grid;!important;
 }
 .all_projects{
-    width:32%;
-    height:30%;
-    border: 1px solid grey;
+    width:350px;
+    height:220px;
+    border: 1px solid #1b6d85;
     padding: 5px;
     display: inline-table;
-    color:white;;
-    background-image: url('/uploads/bg/1.jpg');
+    color: #1b6d85;
 }
 .all_projects:hover{
-    color:whitesmoke;
-    border: 1px solid white;
+    color: #2aabd2;
+    border: 1px solid #2aabd2;
 }
 .adding_project_button{
-    background-color: #101010;
+    background-color: #1b6d85;
     font-size: 130%;
     width:10%;
     position: fixed;
@@ -58,7 +57,7 @@
     height:30px;
     font-size: 125%;
     caption-side: top;
-    color:white;
+    color:black;
     display: inline-block;
     border-bottom: 3px solid white;
     margin-bottom: 4px;
@@ -68,40 +67,25 @@
     margin: 0 auto;
 }
 .edit_delit_icon{
-    color:white;
+    color: #2aabd2;
     margin: 2px;
 }
 .edit_delit_icon:hover{
-    color:papayawhip;
+    color:deepskyblue;
 }
 .logo_project{
     width:99%;
 }
-.projects-form{
-    background-image: url("/uploads/bg/1.jpg");
-    padding:25px;
-}
-.site-login{
-    color:white;
-    width:57%;
-}
+
+
 .project_items{
     display: flex;
     padding:25px;
-    border: 1px solid white;
+    border: 1px solid #46b8da;
     border-radius: 4px;
-    color:white;
-    background-image: url("/uploads/bg/1.jpg");
+    color:black;
 }
-.report_table{
-    background-image: url("/uploads/bg/1.jpg");
-    color: whitesmoke;
-}
-.projects-update{
-    color:white;
-    padding: 25px;
-    background-image: url("/uploads/bg/1.jpg");
-}
+
 .proj_icons{
    display: flex;
     float:right;
@@ -112,10 +96,9 @@
     width: 100%;
     height:73px;
     margin-bottom: 5px;
-    background-size: cover;
-    background-image: url("/uploads/bg/1.jpg");
     color:whitesmoke;
     font-size: 150%;
+    background-color: #2aabd2;
 }
 .proj_item_colollapse:hover{
     background-color: deepskyblue;
@@ -126,9 +109,11 @@
     height:60px;
 }
 .projects-create{
-    background-color: transparent;
-    color: white;
     width:70%;
     border-radius: 10px;
     padding:15px;
+}
+.required_asterix {
+    color: red;
+    font-size: 110%;
 }

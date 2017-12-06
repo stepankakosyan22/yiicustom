@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->user->identity->full_name,
+        'brandLabel' => 'Report Board',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -54,9 +54,17 @@ AppAsset::register($this);
             . '</li>';
     } else {
         $menuItems[] = '<li>'
+            . Html::beginForm(['/user/index'], 'post')
+            . Html::submitButton(
+                 ' Users',
+                ['class' => 'btn btn-link logout  glyphicon glyphicon-user']
+            )
+            . Html::endForm()
+            . '</li>';
+        $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
-                 ' Logout',
+                ' Logout',
                 ['class' => 'btn btn-link logout  glyphicon glyphicon-log-out']
             )
             . Html::endForm()

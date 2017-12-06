@@ -2,9 +2,10 @@
 
 namespace backend\controllers;
 
+use frontend\models\Checkin;
 use Yii;
 use backend\models\User;
-use backend\models\UserSearch;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,6 +15,8 @@ use yii\filters\VerbFilter;
  */
 class UserController extends Controller
 {
+    public $password;
+
     /**
      * @inheritdoc
      */
@@ -35,12 +38,11 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $workers=User::find()->andWhere(['position'=>'Worker'])->all();
+        $customers=User::find()->andWhere(['position'=>'Customer'])->all();
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'workers' => $workers,
+            'customers' => $customers,
         ]);
     }
 
@@ -51,8 +53,28 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $checkins=Checkin::find()->where(['user_id'=>$id])->orderBy('week')->all();
+        $hours = (new \yii\db\Query())
+            ->select(['*', 'SUM(`worked_hours`) AS week_hours','SUM(`work_hours_extra`) AS week_hours_extra'])
+            ->from('checkin')
+            ->where(['user_id' => $id])
+            ->groupBy('week')
+            ->orderBy('week DESC')
+            ->all();
+
+            $months = (new \yii\db\Query())
+            ->select(['*', 'SUM(`worked_hours`) AS week_hours','SUM(`work_hours_extra`) AS week_hours_extra'])
+            ->from('checkin')
+            ->where(['user_id' => $id])
+            ->groupBy('month')
+            ->orderBy('month DESC')
+            ->all();
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'checkins' => $checkins,
+            'hours' => $hours,
+            'months' => $months
         ]);
     }
 
@@ -64,9 +86,12 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->scenario='create';
+        if ($model->load(Yii::$app->request->post())) {
+            $model->setPassword($model->password);
+            $model->generateAuthKey();
+            $model->save();
+            return $this->redirect(['user/index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -83,9 +108,11 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $model->scenario='update';
+        if ($model->load(Yii::$app->request->post())) {
+            $model->setPassword($model->password);
+            $model->save();
+            return $this->redirect(['user/index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -103,7 +130,7 @@ class UserController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['/user/index']);
     }
 
     /**

@@ -9,18 +9,6 @@ use common\models\User;
  */
 class SignupForm extends Model
 {
-    public $username;
-    public $email;
-    public $password;
-    public $full_name;
-    public $gender;
-    public $dob;
-    public $prof_image;
-    public $work_time;
-    public $team;
-    public $position;
-    public $start_working_at;
-
     /**
      * @inheritdoc
      */

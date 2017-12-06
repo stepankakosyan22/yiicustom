@@ -13,10 +13,7 @@ use yii\helpers\Html;
 
 $this->title = $project->project_name;
 
-$reports = Reports::find()
-    ->andWhere(['id_project' => $project->id_project])
-    ->andWhere(['id_user' => Yii::$app->user->identity->id])
-    ->all();
+
 ?>
 <?php if ($project) { ?>
     <div class="user_proj_items">

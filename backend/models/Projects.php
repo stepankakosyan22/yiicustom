@@ -42,7 +42,6 @@ class Projects extends \yii\db\ActiveRecord
             [['logo'], 'file','skipOnEmpty' => true, 'extensions' => 'jpeg, png, jpg,gif'],
             [['customer'], 'string', 'max' => 255],
 
-            //custom validation
             ['project_name', 'required', 'message' => 'Please write a project name.'],
             ['project_name', 'string', 'min' => 2],
             ['project_name','unique'],
@@ -89,16 +88,4 @@ class Projects extends \yii\db\ActiveRecord
     public function getCustomersCustomer(){
         return $this->hasOne(ProjectWorker::className(), ['id_project'=>'id_project']);
     }
-//    public function upload()
-//    {
-//        if ($this->validate()) {
-//            if(isset($this->logo)){
-//
-//                $this->logoFile->saveAs(Yii::getAlias('@basedir').'/res/audio/' . $this->logoFile->baseName . '.' . $this->logoFile->extension, false);
-//                return true;
-//            }
-//        } else {
-//            return false;
-//        }
-//    }
 }

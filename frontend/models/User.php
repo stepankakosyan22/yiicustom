@@ -27,6 +27,7 @@ use Yii;
  */
 class User extends \yii\db\ActiveRecord
 {
+    public $password;
     /**
      * @inheritdoc
      */
@@ -40,32 +41,43 @@ class User extends \yii\db\ActiveRecord
      */
     public function rules()
     {
-        $def_image=Yii::$app->user->identity->prof_image;
+        if (isset(Yii::$app->user->identity->prof_image) && Yii::$app->user->identity->prof_image!=null){
+            $def_image=Yii::$app->user->identity->prof_image;
+        }else{
+            $def_image=null;
+        }
+
         return [
-            [['username', 'auth_key', 'password_hash', 'email', 'created_at', 'updated_at'], 'required'],
+            [['username', 'auth_key', 'password_hash',  'created_at', 'updated_at'], 'required'],
             [['status', 'created_at', 'updated_at'], 'integer'],
             [['start_working_at','dob'],'string'],
-
+            [['work_time','team'],'string'],
             [['username', 'password_hash', 'password_reset_token', 'email', 'gender', 'work_time', 'team', 'position'], 'string', 'max' => 255],
 
             [['full_name'],'string','min'=>2, 'max'=>25],
             [['full_name'],'required'],
             [['full_name'], 'match', 'pattern' => '/^[a-zA-Z\s]+$/i','message'=>'All characters must be a letters.'],
 
-
-            [['prof_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg', 'on'=>'update'],
+            [['prof_image'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg'],
             [['prof_image'], 'default','value'=>$def_image],
 
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'string'],
             [['username'], 'unique'],
-            [['email'], 'string'],
             [['password_reset_token'], 'string'],
             ['dob', 'validateBirthday'],
-            ['start_working_at', 'validateDates'],
         ];
     }
 
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
     /**
      * @inheritdoc
      */
@@ -77,7 +89,6 @@ class User extends \yii\db\ActiveRecord
             'auth_key' => 'Auth Key',
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',

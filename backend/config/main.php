@@ -59,7 +59,7 @@ return [
         ],
         'urlManagerFrontend' => [
             'class' => 'yii\web\urlManager',
-            'baseUrl' => 'http://userside.loc/',//i.e. $_SERVER['DOCUMENT_ROOT'] .'/yiiapp/web/'
+            'baseUrl' => 'http://reportfront.local/',//i.e. $_SERVER['DOCUMENT_ROOT'] .'/yiiapp/web/'
             'enablePrettyUrl' => true,
             'showScriptName' => false,
         ],

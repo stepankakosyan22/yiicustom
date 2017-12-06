@@ -6,8 +6,9 @@ use yii\helpers\Url;
 use dosamigos\datepicker\DatePicker;
 
 /* @var $this yii\web\View */
-/* @var $model frontend\models\SignupForm */
+/* @var $model \app\models\User */
 /* @var $form ActiveForm */
+
 $this->title = 'Edit ' . $model->position . ' page';
 ?>
 <div style="display:flex;">
@@ -21,14 +22,15 @@ $this->title = 'Edit ' . $model->position . ' page';
             'validationUrl' => Url::to('/site/uservalidation')
         ]); ?>
 
-        <div style="width:40%;float:right;margin:10px;">
+        <div>
             <?php if (!empty($model->prof_image)){?>
-                <img style="width:100%;float: left" class="img-rounded" src="/<?= $model->prof_image ?>"/>
+                <img class="img-rounded work_upd_pp" src="/<?= $model->prof_image ?>"/>
             <?php } elseif($model->gender=="Male"){ ?>
-                <img style="width:100%;float: left"  src="/uploads/User_male.png"/>
-            <?php }else{?>
-                <img style="width:100%;float: left"  src="/uploads/User_female.png"/>
-
+                <img class="work_upd_pp" src="/uploads/User_male.png"/>
+            <?php }elseif($model->gender=="Female"){?>
+                <img class="work_upd_pp" src="/uploads/User_female.png"/>
+                <?php }else{ ?>
+                <img class="work_upd_pp" src="/uploads/unknown.png"/>
             <?php }?>
         </div>
 
@@ -48,14 +50,10 @@ $this->title = 'Edit ' . $model->position . ' page';
 
             <div class="form_imput_flex">
                 <div class="form_imput_items">
-                    <?= $form->field($model, 'dob')->widget(
-                        DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']
-                    ])->label('Date of birth') ?>
+                    <?= $form->field($model, 'dob')->textInput(['id'=>'dob']) ?>
                 </div>
                 <div style='width:51%'>
-                    <?= $form->field($model, 'start_working_at')->widget(
-                        DatePicker::className(), ['inline' => false, 'clientOptions' => ['autoclose' => true, 'format' => 'yyyy-mm-dd']]
-                    )->label('Start working at') ?>
+                    <?= $form->field($model, 'start_working_at')->dropDownList(['9:00'=>'9:00','9:30'=>'9:30'])->label('Start working at') ?>
                 </div>
             </div>
 
@@ -70,7 +68,7 @@ $this->title = 'Edit ' . $model->position . ' page';
 
             <?= $form->field($model, 'username') ?>
 
-            <?= $form->field($model, 'email') ?>
+            <?= $form->field($model, 'password')->passwordInput() ?>
 
             <div class="form-group">
                 <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success adding_new_project' : 'btn btn-primary']) ?>

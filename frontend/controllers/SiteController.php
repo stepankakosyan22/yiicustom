@@ -21,12 +21,13 @@ use yii\web\User;
 use yii\widgets\ActiveForm;
 use yii\helpers\Json;
 use yii\web\JsonParser;
-
+use yii\web\NotFoundHttpException;
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+    public $password;
     /**
      * @inheritdoc
      */
@@ -85,7 +86,16 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
+        if (Yii::$app->user->isGuest) {
+            $model = new LoginForm();
+            if ($model->load(Yii::$app->request->post()) && $model->login()) {
+                return $this->goBack();
+            } else {
+                return $this->render('login', [
+                    'model' => $model,
+                ]);
+            }
+        }
         $current_user_id = \Yii::$app->user->id;
         $customer_projects=(new Query())
             ->select('*')
@@ -166,49 +176,33 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
-
     public function actionUpdate($id)
     {
         $model = \app\models\User::findOne($id);
+
         if ($model->load(Yii::$app->request->post())) {
             $imageName = $model->username.date('m');
-            if ( $model->validate()) {
-                $model->prof_image = UploadedFile::getInstance($model, 'prof_image');
+            $post=Yii::$app->request->post();
+            $password=$post['User']['password'];
 
+
+                $model->prof_image = UploadedFile::getInstance($model, 'prof_image');
                 if (!empty($model->prof_image)) {
                     $model->prof_image->saveAs('uploads/users/' . $imageName . '.' . $model->prof_image->extension);
                     $model->prof_image = 'uploads/users/' . $imageName . '.' . $model->prof_image->extension;
                 }
+                if ($post['User']['password']!=null){
+                    $model->setPassword($password);
+                }
+
+
                 $model->save();
                 return $this->redirect('/');
-            }
         }
         return $this->render('workerupdate', [
             'model' => $model,
         ]);
     }
-
 
     /**
      * Displays about page.
@@ -246,7 +240,6 @@ class SiteController extends Controller
             }
         }
 
-
         return $this->render('signup', [
             'model' => $model,
         ]);
@@ -275,10 +268,16 @@ class SiteController extends Controller
         $customer_name=\app\models\User::find()->where(['position'=>'Customer'])->all();
 
         $project = Projects::find()->where(['id_project' => Yii::$app->request->get()['id_project']])->one();
+
+        $reports = Reports::find()
+            ->andWhere(['id_project' => $project->id_project])
+            ->andWhere(['id_user' => Yii::$app->user->identity->id])
+            ->orderBy(['report_day'=>SORT_DESC])
+            ->all();
         return $this->render('/site/project', [
             'project' => $project,
             'customer_name'=>$customer_name,
-
+            'reports'=>$reports
         ]);
     }
 
